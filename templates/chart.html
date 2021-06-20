@@ -1,0 +1,44 @@
+<html>
+<head>
+    <title>graph test</title>
+</head>
+<body>
+    <h1>Real time chart</h1>
+    <div id="graph" class="epoch" style="height: 200px;"></div>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'js/epoch.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/epoch.min.css' %}">
+    <script type="text/javascript">
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+    );
+
+    var data = [
+        { label: "X-axis", values: [] },
+        { label: "Y-axis", values: [] },
+        { label: "Z-axis", values: [] },
+        ];
+    var lineChart = $('#graph').epoch({
+        type: 'time.line',
+        data: data,
+        axes: ['left', 'right', 'bottom'],
+    });
+
+    chatSocket.onmessage = function(e) {
+        const current = JSON.parse(e.data);
+        lineChart.push(current);
+    };
+
+    chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+    </script>
+</body>
+</html>
