@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/epoch.min.css' %}">
     <script type="text/javascript">
 
-    const chatSocket = new WebSocket(
+    const dataSocket = new WebSocket(
         'ws://'
         + window.location.host
         + '/ws/'
@@ -30,12 +30,12 @@
         axes: ['left', 'right', 'bottom'],
     });
 
-    chatSocket.onmessage = function(e) {
+    dataSocket.onmessage = function(e) {
         const current = JSON.parse(e.data);
         lineChart.push(current);
     };
 
-    chatSocket.onclose = function(e) {
+    dataSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
 

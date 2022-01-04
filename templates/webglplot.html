@@ -10,8 +10,8 @@
     </div>
     <style>
         body {
-            background-color: rgb(0.1, 0.1, 0.1);
-            color: white;
+            background-color: rgb(255, 255, 255);
+            color: rgb(0, 0, 0);
             font-family: Arial, Helvetica, sans-serif;
         }
 
@@ -22,7 +22,7 @@
     </style>
     <script type="text/javascript">
             
-        const chatSocket = new WebSocket(
+        const dataSocket = new WebSocket(
             'ws://'
             + window.location.host
             + '/ws/'
@@ -40,7 +40,7 @@
             { label: "Z-axis", values: [] },
             ];
 
-        chatSocket.onmessage = function(e) {
+        dataSocket.onmessage = function(e) {
             const current = JSON.parse(e.data);
             time = current[0]["time"];
             x_value = current[0]["y"];
@@ -94,7 +94,7 @@
             i+=1;
         }
 
-        chatSocket.onclose = function(e) {
+        dataSocket.onclose = function(e) {
                 console.error('Chat socket closed unexpectedly');
         };
 
