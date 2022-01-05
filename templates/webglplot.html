@@ -3,8 +3,8 @@
     <title>graph test</title>
 </head>
 <body>
-    <h1>Real time chart</h1>
     <script src="https://cdn.jsdelivr.net/gh/danchitnis/webgl-plot@master/dist/webglplot.umd.min.js"></script>
+    <h1>Real time chart</h1>
     <div>
         <canvas class="canvas" id="my_canvas"></canvas>
     </div>
@@ -21,27 +21,15 @@
     </style>
     <script type="text/javascript">
             
-        const dataSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/'
-        );
+        const dataSocket = new WebSocket('ws://'+window.location.host+'/ws/');
 
-        var time = 0;
         var x_value = 0;
         var y_value = 0;
         var z_value = 0;
         var i = 0;
 
-        var data = [
-            { label: "X-axis", values: [] },
-            { label: "Y-axis", values: [] },
-            { label: "Z-axis", values: [] },
-            ];
-
         dataSocket.onmessage = function(e) {
             const current = JSON.parse(e.data);
-            time = current[0]["time"];
             x_value = current[0]["y"];
             y_value = current[1]["y"];
             z_value = current[2]["y"];
@@ -54,21 +42,21 @@
         canvas.height = canvas.clientHeight * devicePixelRatio;
 
         const numX = canvas.width;
-        const color_red = new WebglPlotBundle.ColorRGBA(255, 0, 0, 1,);
-        const color_blue = new WebglPlotBundle.ColorRGBA(0, 0, 255, 1,);
-        const color_green = new WebglPlotBundle.ColorRGBA(0, 255, 0, 1,);
+        const color_r = new WebglPlotBundle.ColorRGBA(255, 0, 0, 1,);
+        const color_b = new WebglPlotBundle.ColorRGBA(0, 0, 255, 1,);
+        const color_g = new WebglPlotBundle.ColorRGBA(0, 255, 0, 1,);
 
-        const line1 = new WebglPlotBundle.WebglLine(color_red, numX);
-        const line2 = new WebglPlotBundle.WebglLine(color_blue, numX);
-        const line3 = new WebglPlotBundle.WebglLine(color_green, numX);
+        const line1 = new WebglPlotBundle.WebglLine(color_r, numX);
+        const line2 = new WebglPlotBundle.WebglLine(color_b, numX);
+        const line3 = new WebglPlotBundle.WebglLine(color_g, numX);
         const wglp = new WebglPlotBundle.WebglPlot(canvas);
 
-        line1.arrangeX();
-        line2.arrangeX();
-        line3.arrangeX();
-        console.log(line1);
-        console.log(line2);
-        console.log(line3);
+        line1.lineSpaceX(-1, 2 / numX)
+        line2.lineSpaceX(-1, 2 / numX)
+        line3.lineSpaceX(-1, 2 / numX)
+        line1.scaleY = 0.5;
+        line2.scaleY = 0.5;
+        line3.scaleY = 0.5;
         wglp.addLine(line1);
         wglp.addLine(line2);
         wglp.addLine(line3);
@@ -94,7 +82,7 @@
         }
 
         dataSocket.onclose = function(e) {
-                console.error('Chat socket closed unexpectedly');
+            console.error('Chat socket closed unexpectedly');
         };
 
     </script>
