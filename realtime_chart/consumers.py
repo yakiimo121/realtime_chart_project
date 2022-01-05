@@ -35,20 +35,22 @@ class SensorConsumer(WebsocketConsumer):
 
         while True:
             # センサーからUDPでデータを受信
-            msg, address = s.recvfrom(8192)
+            msg, _ = s.recvfrom(8192)
+            data_type = msg.decode('utf-8').split('\t')[1]
 
-            t = int(float(msg.decode('utf-8').split('\t')[0]))
-            x = float(msg.decode('utf-8').split('\t')[-1].split(',')[1])
-            y = float(msg.decode('utf-8').split('\t')[-1].split(',')[2])
-            z = float(msg.decode('utf-8').split('\t')[-1].split(',')[3])
+            if data_type == 'ACC':
+                t = int(float(msg.decode('utf-8').split('\t')[0]))
+                x = float(msg.decode('utf-8').split('\t')[-1].split(',')[1])
+                y = float(msg.decode('utf-8').split('\t')[-1].split(',')[2])
+                z = float(msg.decode('utf-8').split('\t')[-1].split(',')[3])
 
-            # Websocketで送信
-            if self.publishing == False:
-                break
-            self.send(text_data=json.dumps([
-                {'time': t,'y': x,},
-                {'time': t,'y': y,},
-                {'time': t,'y': z,},
-                ]))
+                # Websocketで送信
+                if self.publishing == False:
+                    break
+                self.send(text_data=json.dumps([
+                    {'time': t,'y': x,},
+                    {'time': t,'y': y,},
+                    {'time': t,'y': z,},
+                    ]))
 
         s.close()

@@ -2,5 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.chart, name='chart'),
+    path('epochjs/', views.epochjs, name='chart'),
+    path('webglplot/', views.webglplot, name='chart'),
 ]
